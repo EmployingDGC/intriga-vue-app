@@ -6,6 +6,7 @@
                 placeholder="O que está acontecendo?"
                 maxlength="280"
                 wrap="hard"
+                @keyup.ctrl.enter="edit_post"
             ></textarea>
             <button
                 @click="edit_post"
@@ -25,8 +26,6 @@ export default {
             const post = this.post
             
             if (post.content) {
-                post.date_edit = new Date()
-                post.qtt_edits += 1
                 onEditPost.$emit("edited-post", post)
             }
         }

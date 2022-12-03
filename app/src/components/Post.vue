@@ -82,7 +82,6 @@ export default {
             onDelPost.$emit("del-post", this.post)
         },
         edit_post() {
-            this.post.date_edit = new Date()
             onEditPost.$emit("edit-post", this.post)
         },
         comment_post() {

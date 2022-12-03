@@ -149,6 +149,8 @@ export default {
                 const p = this.posts[i]
                 
                 if (p.id == post.id) {
+                    post.date_edit = new Date()
+                    post.qtt_edits += 1
                     this.posts[i] = post
                     break
                 }
