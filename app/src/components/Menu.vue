@@ -56,17 +56,29 @@
                 </div>
             </a></li>
         </ul>
-        <button>Intrigar</button>
+        <button
+            @click="login"
+        >{{ logged_user ? "Deslogar" : "Aguardando Login ..." }}</button>
     </div>
 </template>
 
 <script>
+import onLogin from "../events/onLogin"
+
 export default {
     name: "Menu",
     components: {},
+    props: ["logged_user"],
     data() {
         return {
             
+        }
+    },
+    methods: {
+        login() {
+            if (this.logged_user) {
+                onLogin.$emit("sign-out")
+            }
         }
     }
 }

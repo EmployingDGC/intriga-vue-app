@@ -17,6 +17,16 @@ const get_str_month = (month) => {
     return o[month]
 }
 
+const lpad = (value) => {
+    const v = String(value)
+
+    if (v.length < 2) {
+        return `0${value}`
+    }
+
+    return v
+}
+
 const format_date = (date) => {
     const days = date.getDate()
     const months = date.getMonth()
@@ -26,10 +36,11 @@ const format_date = (date) => {
 
     const str_month = get_str_month(months)
 
-    return `${days} de ${str_month} de ${years} às ${hours}:${minutes}`
+    return `${days} de ${str_month} de ${years} às ${lpad(hours)}:${lpad(minutes)}`
 }
 
 export {
     get_str_month,
-    format_date
+    format_date,
+    lpad
 }
