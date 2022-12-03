@@ -6,7 +6,7 @@
 
 [ ] - Uma postagem pode ser respondida, devendo o usuário “comum” se identificar com seu nome na resposta;
 
-[ ] - Uma postagem pode ser excluída pelo usuário majoritário;
+[x] - Uma postagem pode ser excluída pelo usuário majoritário;
 
 [ ] - Uma postagem pode ser curtida: nesse caso, a postagem mudará de cor e deverá ficar em destaque
 
