@@ -27,18 +27,16 @@
             </a>
             <a
                 href="#"
-                class="icon-reintrigs"
                 @click="reintrig_post"
             >
-                <span><svg viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg></span>
+                <span><svg :style="this.is_reintrig ? {fill: '#00c784'} : {fill: 'var(--color-text-gray)'}" viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg></span>
                 <span>{{ post.reintrigs.length }}</span>
             </a>
             <a
                 href="#"
-                class="icon-likes"
                 @click="like_post"
             >
-                <span><svg viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg></span>
+                <span><svg :style="this.is_like ? {fill: '#ff1b92'} : {fill: 'var(--color-text-gray)'}" viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1hdv0qi"><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg></span>
                 <span>{{ post.likes.length }}</span>
             </a>
             <a href="#">
@@ -59,13 +57,21 @@ import onInteractPost from "../events/onInteractPost"
 
 export default {
     name: "Post",
-    props: ["user", "post"],
+    props: ["user", "post", "logged_user"],
+    watch: {
+        logged_user: {
+            handler() {
+                this.update_interact()
+            }
+        }
+    },
     components: {
         User
     },
     data() {
         return {
-            
+            is_reintrig: false,
+            is_like: false
         }
     },
     methods: {
@@ -84,9 +90,39 @@ export default {
         },
         reintrig_post() {
             onInteractPost.$emit("reintrig-post", this.post)
+            this.update_interact()
         },
         like_post() {
             onInteractPost.$emit("like-post", this.post)
+            this.update_interact()
+        },
+        update_interact() {
+            this.is_reintrig = false
+            this.is_like = false
+
+            if (!this.logged_user) {
+                return
+            }
+
+            const logged_id_user = this.logged_user.id
+
+            for (let i = 0; i < this.post.reintrigs.length; i += 1) {
+                const id_user = this.post.reintrigs[i]
+
+                if (logged_id_user == id_user) {
+                    this.is_reintrig = true
+                    break
+                }
+            }
+
+            for (let i = 0; i < this.post.likes.length; i += 1) {
+                const id_user = this.post.likes[i]
+
+                if (logged_id_user == id_user) {
+                    this.is_like = true
+                    break
+                }
+            }
         }
     }
 }
@@ -137,7 +173,8 @@ export default {
     }
 
     .date {
-        font-size: .8rem;
+        font-size: .7rem;
+        color: var(--color-text-gray);
     }
 
     .container-options {
@@ -162,10 +199,6 @@ export default {
     .icon:hover {
         background-color: var(--color-background-button-hover-white);
 
-    }
-
-    .icon svg {
-        fill: var(--color-text-gray);
     }
 
     .icon-trash-can {

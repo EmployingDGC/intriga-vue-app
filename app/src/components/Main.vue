@@ -7,6 +7,7 @@
                 :key="p.id"
                 :user="get_user(p.user_id)"
                 :post="p"
+                :logged_user="logged_user"
             />
         </div>
         <EditPost
@@ -159,7 +160,9 @@ export default {
         })
         
         onInteractPost.$on("reintrig-post", (post) => {
-            if (post.user_id == this.logged_user.id) {
+            const id_logged_user = this.logged_user.id
+
+            if (post.user_id == id_logged_user) {
                 return
             }
 
@@ -174,14 +177,14 @@ export default {
                     for (j = 0; j < p.reintrigs.length; j += 1) {
                         const user_id = p.reintrigs[j]
 
-                        if (user_id == post.user_id) {
+                        if (user_id == id_logged_user) {
                             add_reintrig = false
                             break
                         }
                     }
 
                     if (add_reintrig) {
-                        p.reintrigs.push(post.id)
+                        p.reintrigs.push(id_logged_user)
                     } else {
                         p.reintrigs.splice(j, 1)
                     }
@@ -192,7 +195,9 @@ export default {
         })
         
         onInteractPost.$on("like-post", (post) => {
-            if (post.user_id == this.logged_user.id) {
+            const id_logged_user = this.logged_user.id
+
+            if (post.user_id == id_logged_user) {
                 return
             }
 
@@ -207,14 +212,14 @@ export default {
                     for (j = 0; j < p.likes.length; j += 1) {
                         const user_id = p.likes[j]
 
-                        if (user_id == post.user_id) {
+                        if (user_id == id_logged_user) {
                             add_reintrig = false
                             break
                         }
                     }
 
                     if (add_reintrig) {
-                        p.likes.push(post.id)
+                        p.likes.push(id_logged_user)
                     } else {
                         p.likes.splice(j, 1)
                     }
