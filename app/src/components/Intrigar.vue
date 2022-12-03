@@ -37,8 +37,11 @@ export default {
                 onAddPost.$emit("add-post", {
                     user_id: this.logged_user.id,
                     content: this.value_post,
-                    qtt_like: 0,
-                    qtt_reintrig: 0,
+                    posts: [],
+                    reintrigs: [],
+                    likes: [],
+                    qtt_edits: 0,
+                    date_edit: null,
                     date: new Date()
                 })
             }

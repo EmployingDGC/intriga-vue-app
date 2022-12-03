@@ -26,6 +26,7 @@ export default {
             
             if (post.content) {
                 post.date_edit = new Date()
+                post.qtt_edits += 1
                 onEditPost.$emit("edited-post", post)
             }
         }

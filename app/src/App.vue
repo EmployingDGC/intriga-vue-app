@@ -84,6 +84,10 @@ export default {
 			this.logged_user = null
 		},
 		get_next_user_id() {
+			if (this.users.length == 0) {
+				return 1
+			}
+
             const list_id = []
 
             for (let i = 0; i < this.users.length; i += 1) {

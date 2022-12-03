@@ -13,17 +13,23 @@
             v-if="edited_post"
             :post="edited_post"
         />
+        <Comment
+            v-if="comment_post"
+            :post="comment_post"
+		/>
     </div>
 </template>
 
 <script>
 import Intrigar from "./Intrigar.vue"
 import EditPost from "./EditPost.vue"
+import Comment from "./Comment.vue"
 import Post from "./Post.vue"
 
 import onAddPost from "../events/onAddPost"
 import onDelPost from "../events/onDelPost"
 import onEditPost from "../events/onEditPost"
+import onInteractPost from "../events/onInteractPost"
 
 const storage_name_posts = "db_posts"
 
@@ -33,7 +39,8 @@ export default {
     components: {
         Intrigar,
         Post,
-        EditPost
+        EditPost,
+        Comment
     },
     watch: {
         posts: {
@@ -46,7 +53,8 @@ export default {
     data() {
         return {
             posts: [],
-            edited_post: null
+            edited_post: null,
+            comment_post: null
         }
     },
     methods: {
@@ -54,6 +62,10 @@ export default {
             localStorage.setItem(storage_name_posts, JSON.stringify(this.posts))
         },
         get_next_post_id() {
+            if (this.posts.length == 0) {
+				return 1
+			}
+
             const list_id = []
 
             for (let i = 0; i < this.posts.length; i += 1) {
@@ -137,6 +149,76 @@ export default {
                 
                 if (p.id == post.id) {
                     this.posts[i] = post
+                    break
+                }
+            }
+        })
+
+        onInteractPost.$on("comment-post", (post) => {
+            this.comment_post = post
+        })
+        
+        onInteractPost.$on("reintrig-post", (post) => {
+            if (post.user_id == this.logged_user.id) {
+                return
+            }
+
+            for (let i = 0; i < this.posts.length; i += 1) {
+                const p = this.posts[i]
+                
+                let add_reintrig = true
+
+                if (p.id == post.id) {
+                    let j
+
+                    for (j = 0; j < p.reintrigs.length; j += 1) {
+                        const user_id = p.reintrigs[j]
+
+                        if (user_id == post.user_id) {
+                            add_reintrig = false
+                            break
+                        }
+                    }
+
+                    if (add_reintrig) {
+                        p.reintrigs.push(post.id)
+                    } else {
+                        p.reintrigs.splice(j, 1)
+                    }
+
+                    break
+                }
+            }
+        })
+        
+        onInteractPost.$on("like-post", (post) => {
+            if (post.user_id == this.logged_user.id) {
+                return
+            }
+
+            for (let i = 0; i < this.posts.length; i += 1) {
+                const p = this.posts[i]
+                
+                let add_reintrig = true
+
+                if (p.id == post.id) {
+                    let j
+
+                    for (j = 0; j < p.likes.length; j += 1) {
+                        const user_id = p.likes[j]
+
+                        if (user_id == post.user_id) {
+                            add_reintrig = false
+                            break
+                        }
+                    }
+
+                    if (add_reintrig) {
+                        p.likes.push(post.id)
+                    } else {
+                        p.likes.splice(j, 1)
+                    }
+
                     break
                 }
             }
