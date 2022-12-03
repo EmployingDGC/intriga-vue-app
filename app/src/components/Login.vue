@@ -98,7 +98,7 @@ export default {
                 return
             }
 
-            this.valid_login = /^[a-z_]*$/.exec(_login.toLowerCase()) ? true : false
+            this.valid_login = /^[a-z]+[a-z_0-9]*$/.exec(_login.toLowerCase()) ? true : false
         }
     },
     created() {
