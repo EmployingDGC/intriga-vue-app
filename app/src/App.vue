@@ -2,7 +2,7 @@
 	<div id="app">
 		<Menu
 			:logged_user="logged_user"
-			:qtt_users="users.length"
+			:qtt_users="users ? users.length : 0"
 		/>
 		<Main
 			:logged_user="logged_user"

@@ -92,7 +92,9 @@ export default {
             },
             deep: true
         },
-        qtt_users: {}
+        qtt_users: {
+            handler() {}
+        }
     },
     data() {
         return {
