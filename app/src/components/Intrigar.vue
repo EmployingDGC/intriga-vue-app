@@ -51,6 +51,9 @@ export default {
 <style scoped>
     .intrigar {
         display: flex;
+        border: 1px solid var(--color-text-gray);
+        border-top: none;
+        padding: 5px;
     }
     
     .user {
@@ -58,7 +61,7 @@ export default {
     }
 
     .content {
-        margin-left: 10px;
+        margin-bottom: 10px;
         width: 100%;
     }
 

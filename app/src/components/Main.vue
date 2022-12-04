@@ -8,15 +8,17 @@
                 :user="get_user(p.user_id)"
                 :post="p"
                 :logged_user="logged_user"
+                :users="users"
             />
         </div>
         <EditPost
             v-if="edited_post"
             :post="edited_post"
         />
-        <Comment
+        <NewComment
             v-if="comment_post"
             :post="comment_post"
+            :logged_user="logged_user"
 		/>
     </div>
 </template>
@@ -24,7 +26,7 @@
 <script>
 import Intrigar from "./Intrigar.vue"
 import EditPost from "./EditPost.vue"
-import Comment from "./Comment.vue"
+import NewComment from "./NewComment.vue"
 import Post from "./Post.vue"
 
 import onInteractPost from "../events/onInteractPost"
@@ -41,7 +43,7 @@ export default {
         Intrigar,
         Post,
         EditPost,
-        Comment
+        NewComment
     },
     watch: {
         posts: {
@@ -96,6 +98,12 @@ export default {
             const post = this.posts[i]
 
             post.date = new Date(post.date)
+
+            for (let j = 0; j < post.posts.length; j += 1) {
+                const comments = post.posts[j]
+
+                comments.date = new Date(comments.date)
+            }
             
             if (post.date_edit) {
                 post.date_edit = new Date(post.date_edit)
@@ -109,7 +117,7 @@ export default {
 
             onInteractUser.$emit("update-storage")
 
-            this.posts.push({id, ...post})
+            this.posts.unshift({id, ...post})
 
             onInteractPost.$emit("add-post-success", true)
         })
@@ -247,6 +255,17 @@ export default {
                 }
             }
         })
+
+        onInteractPost.$on("add-comment", (o) => {
+            const parent_comment = o.post
+            const comment = o.comment
+
+            parent_comment.posts.push(comment)
+
+            this.update_local_storage_posts()
+
+            this.comment_post = null
+        })
     },
     destroyed() {
         onInteractPost.$off("add-post")
@@ -256,6 +275,7 @@ export default {
         onInteractPost.$off("comment-post")
         onInteractPost.$off("reintrig-post")
         onInteractPost.$off("like-post")
+        onInteractPost.$off("add-comment")
     }
 }
 </script>
@@ -263,10 +283,5 @@ export default {
 <style scoped>
     .main {
         width: 600px;
-        padding: 5px;
-    }
-
-    .container-posts {
-        margin-top: 10px;
     }
 </style>
