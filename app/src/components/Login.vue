@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import onLogin from "../events/onLogin"
+import onInteractUser from "../events/onInteractUser"
 
 export default {
     name: "Login",
@@ -54,7 +54,7 @@ export default {
             )
 
             if (valid) {
-                onLogin.$emit("log-in", user)
+                onInteractUser.$emit("log-in", user)
                 user.name = null
                 user.login = null
             }
@@ -70,7 +70,7 @@ export default {
             )
 
             if (valid) {
-                onLogin.$emit("register", user)
+                onInteractUser.$emit("register", user)
                 user.name = null
                 user.login = null
             }
@@ -102,11 +102,11 @@ export default {
         }
     },
     created() {
-        onLogin.$on("log-in-success", (success) => {
+        onInteractUser.$on("log-in-success", (success) => {
             this.valid_login = success
 		})
 
-        onLogin.$on("register-success", (success) => {
+        onInteractUser.$on("register-success", (success) => {
             this.valid_login = success
             this.valid_name = success
 		})

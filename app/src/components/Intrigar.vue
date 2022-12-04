@@ -1,6 +1,5 @@
 <template>
     <div class="intrigar">
-        <User :user="logged_user" />
         <div class="content">
             <textarea
                 placeholder="O que está acontecendo?"
@@ -17,15 +16,12 @@
 </template>
 
 <script>
-import User from "./User.vue"
-import onAddPost from "../events/onAddPost"
+import onInteractPost from "../events/onInteractPost"
 
 export default {
     name: "Intrigar",
     props: ["logged_user"],
-    components: {
-        User
-    },
+    components: {},
     data() {
         return {
             value_post: null
@@ -34,7 +30,7 @@ export default {
     methods: {
         new_post() {
             if (this.value_post) {
-                onAddPost.$emit("add-post", {
+                onInteractPost.$emit("add-post", {
                     user_id: this.logged_user.id,
                     content: this.value_post,
                     posts: [],

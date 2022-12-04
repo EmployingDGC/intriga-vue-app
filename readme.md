@@ -12,8 +12,8 @@
 
 [x] - Pode-se editar uma postagem, pelo usuário majoritário, devendo aparecer uma marcação que esta foi modificada e qual a data que foi feita.
 
-[ ] - Estatísticas que deverão aparecer
-    [ ] - número de postagens totais;
+[x] - Estatísticas que deverão aparecer
+    [x] - número de postagens totais por usuário;
     [x] - número de curtidas de cada postagem;
-    [ ] - quantas edições foram feitas por postagem;
-    [ ] - quantos usuários majoritários estiveram na rede.
+    [x] - quantas edições foram feitas por postagem;
+    [x] - quantos usuários majoritários estiveram na rede.

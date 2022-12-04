@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import onEditPost from "../events/onEditPost"
+import onInteractPost from "../events/onInteractPost"
 
 export default {
     name: "EditPost",
@@ -26,7 +26,7 @@ export default {
             const post = this.post
             
             if (post.content) {
-                onEditPost.$emit("edited-post", post)
+                onInteractPost.$emit("edited-post", post)
             }
         }
     }

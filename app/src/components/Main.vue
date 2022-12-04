@@ -27,12 +27,12 @@ import EditPost from "./EditPost.vue"
 import Comment from "./Comment.vue"
 import Post from "./Post.vue"
 
-import onAddPost from "../events/onAddPost"
-import onDelPost from "../events/onDelPost"
-import onEditPost from "../events/onEditPost"
 import onInteractPost from "../events/onInteractPost"
+import onInteractUser from "../events/onInteractUser"
 
-const storage_name_posts = "db_posts"
+import LocalStorage from "../utils/local_storage"
+
+const posts_local_storage = new LocalStorage("db_posts")
 
 export default {
     name: "Main",
@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         update_local_storage_posts() {
-            localStorage.setItem(storage_name_posts, JSON.stringify(this.posts))
+            posts_local_storage.set_item(this.posts)
         },
         get_next_post_id() {
             if (this.posts.length == 0) {
@@ -90,7 +90,7 @@ export default {
         }
     },
     created() {
-        this.posts = JSON.parse(localStorage.getItem(storage_name_posts)) || []
+        this.posts = posts_local_storage.get_item() || []
 
         for (let i = 0; i < this.posts.length; i += 1) {
             const post = this.posts[i]
@@ -102,30 +102,47 @@ export default {
             }
         }
 
-        onAddPost.$on("add-post", (post) => {
+        onInteractPost.$on("add-post", (post) => {
             const id = this.get_next_post_id()
 
+            this.logged_user.id_posts.push(id)
+
+            onInteractUser.$emit("update-storage")
+
             this.posts.push({id, ...post})
+
+            onInteractPost.$emit("add-post-success", true)
         })
 
-        onDelPost.$on("del-post", (post) => {
-            const user_id = this.logged_user.id
+        onInteractPost.$on("del-post", (post) => {
+            const post_del_id = post.id
+            const user_post_id = post.user_id
+            const user_logged_id = this.logged_user.id
 
-            if (user_id != post.user_id) {
+            if (user_logged_id != user_post_id) {
+                onInteractPost.$emit("del-post-success", false)
                 return
             }
 
             for (let i = 0; i < this.posts.length; i += 1) {
-                const p = this.posts[i]
+                const current_post_id = this.posts[i].id
                 
-                if (p.id == post.id) {
+                if (current_post_id == post_del_id) {
+                    const posts_logged_user = this.logged_user.id_posts
+                    const del_index = posts_logged_user.indexOf(post_del_id)
+
+                    posts_logged_user.splice(del_index, 1)
+                    onInteractUser.$emit("update-storage")
+
                     this.posts.splice(i, 1)
+                    onInteractPost.$emit("del-post-success", true)
+                    
                     return
                 }
             }
         })
         
-        onEditPost.$on("edit-post", (post) => {
+        onInteractPost.$on("edit-post", (post) => {
             const user_id = this.logged_user.id
 
             if (user_id != post.user_id) {
@@ -142,7 +159,7 @@ export default {
             }
         })
         
-        onEditPost.$on("edited-post", (post) => {
+        onInteractPost.$on("edited-post", (post) => {
             this.edited_post = null
 
             for (let i = 0; i < this.posts.length; i += 1) {
@@ -232,10 +249,13 @@ export default {
         })
     },
     destroyed() {
-        onAddPost.$off("add-post")
-        onDelPost.$off("del-post")
-        onEditPost.$off("edit-post")
-        onEditPost.$off("edited-post")
+        onInteractPost.$off("add-post")
+        onInteractPost.$off("del-post")
+        onInteractPost.$off("edit-post")
+        onInteractPost.$off("edited-post")
+        onInteractPost.$off("comment-post")
+        onInteractPost.$off("reintrig-post")
+        onInteractPost.$off("like-post")
     }
 }
 </script>

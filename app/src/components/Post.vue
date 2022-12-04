@@ -14,7 +14,7 @@
         <p>{{ post.content }}</p>
         <div class="container-date">
             <span class="date">Postado em {{ _format_date(post.date) }}</span>
-            <span v-if="post.date_edit" class="date">Editado em {{ _format_date(post.date_edit) }}</span>
+            <span v-if="post.date_edit" class="date">({{ post.qtt_edits }}) Editado em {{ _format_date(post.date_edit) }}</span>
         </div>
         <div class="interact">
             <a
@@ -51,8 +51,7 @@
 import User from "./User.vue"
 
 import { format_date } from "../utils/date"
-import onDelPost from "../events/onDelPost"
-import onEditPost from "../events/onEditPost"
+
 import onInteractPost from "../events/onInteractPost"
 
 export default {
@@ -79,10 +78,10 @@ export default {
             return format_date(date)
         },
         del_post() {
-            onDelPost.$emit("del-post", this.post)
+            onInteractPost.$emit("del-post", this.post)
         },
         edit_post() {
-            onEditPost.$emit("edit-post", this.post)
+            onInteractPost.$emit("edit-post", this.post)
         },
         comment_post() {
             onInteractPost.$emit("comment-post", this.post)

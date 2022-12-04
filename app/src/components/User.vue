@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    name: "UserFollow",
+    name: "User",
     props: ["user", "enabled_infos"]
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
 	<div id="app">
-		<Menu :logged_user="logged_user" />
+		<Menu
+			:logged_user="logged_user"
+			:qtt_users="users.length"
+		/>
 		<Main
 			:logged_user="logged_user"
 			:users="users"
@@ -19,9 +22,11 @@ import Main from "./components/Main.vue"
 import Side from "./components/Side.vue"
 import Login from "./components/Login.vue"
 
-import onLogin from "./events/onLogin"
+import onInteractUser from "./events/onInteractUser"
 
-const storage_name_users = "db_users"
+import LocalStorage from "./utils/local_storage"
+
+const users_local_storage = new LocalStorage("db_users")
 
 export default {
 	name: "App",
@@ -44,12 +49,12 @@ export default {
 
                 if (_login == user.login) {
 					this.logged_user = user
-					onLogin.$emit("log-in-success", true)
+					onInteractUser.$emit("log-in-success", true)
 					return true
 				}
             }
 
-			onLogin.$emit("log-in-success", false)
+			onInteractUser.$emit("log-in-success", false)
 
 			return false
 		},
@@ -58,25 +63,25 @@ export default {
                 const user = this.users[i]
 
                 if (_login == user.login) {
-					onLogin.$emit("register-success", false)
+					onInteractUser.$emit("register-success", false)
 					return false
 				}
             }
 
 			if (!name) {
-				onLogin.$emit("register-success", false)
+				onInteractUser.$emit("register-success", false)
 				return false
 			}
 
 			this.users.push({
 				id: this.get_next_user_id(),
 				name: name,
-				login: _login
+				login: _login,
+				id_posts: []
 			})
 
-			localStorage.setItem(storage_name_users, JSON.stringify(this.users))
-
-			onLogin.$emit("register-success", true)
+			onInteractUser.$emit("register-success", true)
+			onInteractUser.$emit("update-storage")
 
 			return true
 		},
@@ -123,21 +128,25 @@ export default {
 		}
 	},
 	created() {
-		onLogin.$on("log-in", (user) => {
+		this.users = users_local_storage.get_item() || []
+
+		onInteractUser.$on("log-in", (user) => {
 			this.login(user.login)
 		})
 
-		onLogin.$on("register", (user) => {
+		onInteractUser.$on("register", (user) => {
 			if (this.register(user.login, user.name)) {
 				this.login(user.login)
 			}
 		})
 
-		onLogin.$on("sign-out", () => {
+		onInteractUser.$on("sign-out", () => {
 			this.sign_out()
 		})
 
-		this.users = JSON.parse(localStorage.getItem(storage_name_users)) || []
+		onInteractUser.$on("update-storage", () => {
+			users_local_storage.set_item(this.users)
+		})
 	}
 }
 </script>
