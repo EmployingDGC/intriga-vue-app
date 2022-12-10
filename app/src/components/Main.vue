@@ -33,6 +33,7 @@ import onInteractPost from "../events/onInteractPost"
 import onInteractUser from "../events/onInteractUser"
 
 import LocalStorage from "../utils/local_storage"
+import DB from "../utils/db"
 
 const posts_local_storage = new LocalStorage("db_posts")
 
@@ -92,7 +93,14 @@ export default {
         }
     },
     created() {
-        this.posts = posts_local_storage.get_item() || []
+        try {
+            this.posts_db = new DB("db_posts.js", this.$http)
+            this.posts_db.set_item({teste: 1})
+            this.posts_db.get_item(this.posts)
+        } catch (error) {
+            console.log(error)
+            this.posts = posts_local_storage.get_item() || []
+        }
 
         for (let i = 0; i < this.posts.length; i += 1) {
             const post = this.posts[i]

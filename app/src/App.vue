@@ -25,6 +25,7 @@ import Login from "./components/Login.vue"
 import onInteractUser from "./events/onInteractUser"
 
 import LocalStorage from "./utils/local_storage"
+import DB from "./utils/db"
 
 const users_local_storage = new LocalStorage("db_users")
 
@@ -128,7 +129,14 @@ export default {
 		}
 	},
 	created() {
-		this.users = users_local_storage.get_item() || []
+		try {
+			this.users_db = new DB("db_users.js", this.$http)
+			this.users_db.set_item({teste: 1})
+			this.users_db.get_item(this.users)
+		} catch (error) {
+			console.log(error)
+			this.users = users_local_storage.get_item() || []
+		}
 
 		onInteractUser.$on("log-in", (user) => {
 			this.login(user.login)
