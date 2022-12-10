@@ -17,3 +17,11 @@
     - [x] 7.2 - número de curtidas de cada postagem;
     - [x] 7.3 - quantas edições foram feitas por postagem;
     - [x] 7.4 - quantos usuários majoritários estiveram na rede.
+
+# Requisitos - Parte 2
+
+- [ ] 8 - Sua aplicação deverá persistir os dados numa base de dados Firebase, recuperando-os, salvando-os, e temporariamente gerenciando conjuntamente com o LocalStorage
+
+- [ ] 9 - Use múltiplos componentes para a sua aplicação, e utilize o esquema de Rotas para navegação entre eles, sendo o uso das rotas e componentes a cargo de sua avaliação, de acordo com a proposta para seu projeto.
+
+- [ ] 10 - Utilize VueX para a passagem de informações entre elementos "pai - filhos" ou entre componentes distintos sem ancestralidade.
