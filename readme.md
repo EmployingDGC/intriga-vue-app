@@ -1,3 +1,21 @@
+# Run with docker
+
+**buildar e startar o container**
+`docker compose up -d` ou `docker-compose up -d`
+
+**listar containers ativos**
+`docker container ls`
+
+**acessar o container**
+`docker container exec -it <id_container> sh`
+
+**instalar dependencias**
+`npm i`
+
+**startar server**
+`npm run serve`
+
+
 # Requisitos - Parte 1
 
 - [x] 1 - Usuário se identifica para realizar a postagem. A partir de sua identificação, ele será o usuário majoritário, ou seja, somente ele fará postagem e estas possuem a sua identificação. Caso outro usuário deseja postar, deverá se identificar e se transforma no usuário majoritário;
